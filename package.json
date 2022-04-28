@@ -1,0 +1,12 @@
+{
+    "name": "boutique",
+    "version": "0.0.1",
+    "description": "Projet de gestion de stock --boutique--",
+    "devDependencies": {
+        "grunt": "^1.0.1",
+        "grunt-contrib-cssmin": "latest",
+        "grunt-contrib-sass": "latest",
+        "grunt-contrib-uglify": "latest",
+        "grunt-contrib-watch": "latest"
+    }
+}

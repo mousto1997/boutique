@@ -1,0 +1,35 @@
+ <form class="form" action="" method="post">
+  {% csrf_token %}
+  <div class="row m-2">
+      <div class="col-sm-2">
+          <div class="form-group">
+            <label>Category</label>
+            {{ form_s.category }}
+          </div>
+      </div>
+      <div class="col-md-2">
+          <div class="form-group">
+              <label>Designation</label>
+              {{ form_s.designation }}
+          </div>
+      </div>
+      <div class="col-md-2">
+          <div class="form-group">
+              <label>Size</label>
+              {{ form_s.size }}
+          </div>
+      </div>
+
+      <div class="col-md-2">
+          <div class="form-group">
+              {{ form_s.export_to_CSV }}
+              <label>Export To CSV</label>
+          </div>
+      </div>
+      <div class="col-md-2">
+          <div class="form-group">
+            <button class="btn btn-primary btn-sm" type="submit">Chercher</button>
+          </div>
+      </div>
+  </div>
+</form>

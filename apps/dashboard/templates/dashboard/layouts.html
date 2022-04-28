@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+
+{% include 'base/links.html' %}
+
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  <!-- Navbar -->
+  {% include 'base/navbar.html' %}
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  {% include 'base/sidbar.html' %}
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    {% block content %}
+    
+
+    {% endblock %}
+  </div>
+  <!-- /.content-wrapper -->
+
+ {% include 'base/footer.html' %}
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+  </aside>
+  <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+{% include 'base/scripts.html' %}
+
+{% block script %}
+
+{% endblock %}
+</body>
+</html>
