@@ -32,16 +32,21 @@ class ProductForm(ModelForm):
     class Meta:
         model = Product
         fields = '__all__'
-        exclude=['slug', 'created_by']
+        exclude=['code', 'slug', 'created_by']
 
     def __init__(self, *args, **kwargs):
         super(ProductForm, self).__init__(*args, **kwargs)
-        self.fields['code'].widget.attrs['class'] = 'form-control'
-        self.fields['code'].widget.attrs['v-model'] = 'code'
+        self.fields['color'].widget.attrs['class'] = 'input select2'
+        self.fields['color'].widget.attrs['multiple'] = 'multiple'
+        self.fields['color'].widget.attrs['v-model'] = 'color'
         self.fields['category'].widget.attrs['class'] = 'input'
+        self.fields['category'].widget.attrs['v-model'] = 'category'
         self.fields['designation'].widget.attrs['class'] = 'input'
+        self.fields['designation'].widget.attrs['v-model'] = 'designation'
         self.fields['size'].widget.attrs['class'] = 'input'
+        self.fields['size'].widget.attrs['v-model'] = 'size'
         self.fields['price'].widget.attrs['class'] = 'input'
+        self.fields['price'].widget.attrs['v-model'] = 'price'
 
 
 class ProductSearchForm(forms.ModelForm):

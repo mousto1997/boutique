@@ -1,0 +1,46 @@
+<script type="text/javascript">
+    new Vue({
+        el: '.add-product',
+        delimiters: ['[[', ']]'],
+        data () {
+            return {
+                category: '',
+                designation: '',
+                color: '',
+                size: '',
+                price: '',
+                errors: []
+            }
+        },
+        methods: {
+            submitForm: function(e){
+                this.errors = []
+
+                if (!this.designation.length){
+                    this.errors.push('The designation is missing')
+                }
+                if (!this.category.length){
+                    this.errors.push('The category is missing')
+                }
+                if (!this.size.length){
+                    this.errors.push('The size is missing')
+                }
+                if (!this.price.length){
+                    this.errors.push('The price is missing')
+                }
+                if (this.errors.length){
+                    e.preventDefault()
+
+                    return false
+                }
+            }
+        }
+    });
+
+        $('.select2').select2();
+
+        $('.select2bs4').select2({
+          theme: 'bootstrap4'
+        })
+
+</script>

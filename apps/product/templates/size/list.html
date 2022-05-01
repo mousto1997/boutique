@@ -1,0 +1,239 @@
+{% extends 'dashboard/layouts.html' %}
+{% load static %}
+{% block content %}
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+              <h1 class="m-0 text-dark">
+                  Taille des Produits
+              </h1>
+            </div><!-- /.col -->
+            <div class="col-sm-4">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item active">Taille</li>
+              </ol>
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+      <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-4 ">
+                <h3>Ajouter une Taille</h3>
+                <form id="addSize" method="post">
+                  {% csrf_token %}
+                  <div class="form-group">
+                    <input class="form-control" type="text" name="labelle" placeholder="Labelle" required>
+                  </div>
+                  <div class="form-group">
+                    <input class="form-control" type="text" name="description" placeholder="Description" required>
+                  </div>
+                  <button class="btn btn-primary form-control" type="submit">AJOUTER</button>
+                </form>
+              </div>
+              <div class="col-md-8">
+                <div class="card">
+                  <div class="card-header">
+                    <h3 class="card-title">Liste des Categories</h3>
+                  </div>
+                  <!-- /.card-header -->
+                  <div class="card-body">
+                    <table  id="sizeTable" class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Categorie</th>
+                          <th>Description</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% if sizes %}
+                            {% for size in sizes %}
+                              <tr id="size-{{size.id}}">
+                                <td class="sizeLabelle sizeData" name="labelle">{{ size.labelle }}</td>
+                                <td class="sizeDescription sizeData" name="description">{{ size.description }}</td>
+                                <td>
+                                  <button class="btn btn-primary btn-sm" onClick="editSize({{size.id}})" data-toggle="modal" data-target="#sizeModal")><i class="fas fa-edit fa-lg mr-2"></i></button>
+                                  <button class="btn btn-danger btn-sm" onClick="deleteSize({{size.id}})"><i class="fas fa-trash fa-lg mr-2"></i></button>
+                                </td>
+
+                              </tr>
+                            {% endfor %}
+                        {% else %}
+                          <tr colspan="3">Y aucune categorie</tr>
+                        {% endif %}
+                      </tbody>
+                    </table>
+                  </div>
+                  <!-- /.card-body -->
+                  <div class="card-footer clearfix">
+                    <ul class="pagination pagination-sm m-0 float-right">
+                      <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
+                      <li class="page-item"><a class="page-link" href="#">1</a></li>
+                      <li class="page-item"><a class="page-link" href="#">2</a></li>
+                      <li class="page-item"><a class="page-link" href="#">3</a></li>
+                      <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+                    </ul>
+                  </div>
+                </div>
+                <!-- /.card -->
+              </div>
+
+            </div>
+        </div>
+
+      <div class="modal fade" id="sizeModal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <form id="updateSize" method="post">
+              {% csrf_token %}
+              <div class="modal-header">
+                <h4 class="modal-title">Modifier la Categorie</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                  <input class="form-control" id="form-id" type="hidden" name="formId"/>
+                  <label for="form-labelle">Labelle</label>
+                  <input class="form-control" id="form-labelle" type="text" name="formLabelle"/>
+                  <label for="form-description">Description</label>
+                  <input class="form-control" id="form-description" type="text" name="formDescription"/>
+              </div>
+              <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save changes</button>
+              </div>
+            </form>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+      <!-- /.modal -->
+    </section>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+<!--    ADD TAG-->
+    $("form#addSize").submit(function() {
+    var labelleInput = $('input[name="labelle"]').val().trim();
+    var descriptionInput = $('input[name="description"]').val().trim();
+    if (labelleInput && descriptionInput) {
+        // Create Ajax Call
+        $.ajax({
+            url: '{% url "new_size" %}',
+            data: {
+                'labelle': labelleInput,
+                'description': descriptionInput,
+            },
+            dataType: 'json',
+            success: function (data) {
+                if(data.size) {
+                  appendToSizeTable(data.size);
+                }
+            }
+        });
+      } else {
+        alert("All fields must have a valid value.");
+    }
+    $('form#addSize').trigger("reset");
+    $('#addCatModal').modal("hide");
+    return false;
+    });
+    function appendToSizeTable(size) {
+      $("#sizeTable > tbody:last-child").append(`
+        <tr id="size-${size.id}">
+            <td class="sizeLabelle sizeData" name="labelle">${size.labelle}</td>
+            '<td class="sizeDescription sizeData" name="description">${size.description}</td>
+            '<td>
+                <button class="btn btn-primary btn-sm" onClick="editSize({{size.id}})" data-toggle="modal" data-target="#sizeModal")><i class="fas fa-edit fa-lg mr-2"></i></button>
+                 <button class="btn btn-danger btn-sm" onClick="deleteSize({{size.id}})"><i class="fas fa-trash fa-lg mr-2"></i></button>
+            </td>
+        </tr>
+    `);
+    }
+
+
+<!--    // Update Tag with ajax-->
+
+$("form#updateSize").submit(function() {
+    var idInput = $('input[name="formId"]').val().trim();
+    var labelleInput = $('input[name="formLabelle"]').val().trim();
+    var descriptionInput = $('input[name="formDescription"]').val().trim();
+    if (labelleInput && descriptionInput) {
+        // Create Ajax Call
+        $.ajax({
+            url: '{% url "edit_size" %}',
+            data: {
+                'id': idInput,
+                'labelle': labelleInput,
+                'description': descriptionInput,
+            },
+            dataType: 'json',
+            success: function (data) {
+                if (data.size) {
+                  updateToSizeTabel(data.size);
+                }
+            }
+        });
+       } else {
+        alert("All fields must have a valid value.");
+    }
+    $('form#updateSize').trigger("reset");
+    $('#sizeModal').modal('hide');
+    return false;
+});
+
+// Update Django Ajax Call
+function editSize(id) {
+  if (id) {
+    tr_id = "#size-" + id;
+    labelle = $(tr_id).find(".sizeLabelle").text();
+    description = $(tr_id).find(".sizeDescription").text();
+    $('#form-id').val(id);
+    $('#form-labelle').val(labelle);
+    $('#form-description').val(description);
+  }
+}
+function updateToSizeTabel(size){
+    $("#sizeTable #size-" + size.id).children(".sizeData").each(function() {
+        var attr = $(this).attr("labelle");
+        if (attr == "name") {
+          $(this).text(size.labelle);
+        } else {
+          $(this).text(size.description);
+        }
+    });
+}
+
+<!-- DELETE size -->
+
+function deleteSize(id) {
+  var action = confirm("Are you sure you want to delete this size?");
+  if (action != false) {
+    $.ajax({
+        url: '{% url "delete_size" %}',
+        data: {
+            'id': id,
+        },
+        dataType: 'json',
+        success: function (data) {
+            if (data.deleted) {
+              $("#sizeTable #size-" + id).remove();
+            }
+        }
+    });
+  }
+}
+</script>
+{% endblock %}

@@ -1,78 +1,27 @@
-{% extends 'dashboard/layouts.html' %}
-{% block content %}
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-        <div class="container-fluid">
-          <div class="row mb-2">
-            <div class="col-sm-6">
-              <h1 class="m-0 text-dark"><a href="{% url 'product_list' %}"><i class="fas fa-th-large"></i> </a> [[message]]</h1>
-            </div><!-- /.col -->
-            <div class="col-sm-6">
-              <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="/">Home</a></li>
-                <li class="breadcrumb-item active">Produits</li>
-              </ol>
-            </div><!-- /.col -->
-          </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
-    </div>
-      <!-- /.content-header -->
-
-    <div class="row" style="border-style: solid; padding: 10px;">
-        <div class="col-md-10">
-           {% include 'product/searchForm.html' %}
-        </div>
-        <div class="col-md-2">
-            <a href="{% url 'add_product' %}" class="btn btn-primary">+ Ajouter</a>
-        </div>
-    </div>
-<br>
-
-    <!-- Main content -->
-    <section class="content"  id="product_list">
-        <div class="row">
-            <div class="col-md-3 col-sm-4 col-xs-6" v-for="product in products">
-                <div class="card card-link">
-                    <div class="card-content">
-                        <div class="media">
-                            <div class="media-content">
-                                <p class="title is-4">[[product.designation]]</p>
-                            </div>
-                        </div>
-
-                        <div class="content">
-                            [[ product.description ]]
-                        </div>
+{% load static %}
+<div class="row">
+    <div class="col-md-3 col-sm-4 col-xs-6"
+         v-if="showList"
+         v-for="product in products">
+        <div class="card card-link">
+            <div class="card-content">
+                <div class="media">
+                    <div class="media-content">
+                        <p class="title is-4">[[product.designation]]</p>
                     </div>
+                </div>
 
-                    <footer class="card-footer">
-                        <a :href="product.edit" class="card-footer-item">Visit</a>
-                        <a :href="product.edit" class="card-footer-item">Edit</a>
-                    </footer>
+                <div class="content">
+                    <img src="{% static 'images/3.jpg' %}" alt="">
+                    [[ product.description ]]
                 </div>
             </div>
-        </div>
-    </section>
-    <!-- /.content -->
-{% endblock %}
 
-{% block script %}
-    <script type="text/javascript">
-        new Vue({
-            el: '#product_list',
-            delimiters: ['[[', ']]'],
-            data () {
-                return {
-                    showListDialog: false,
-                    message: 'List des produits',
-                    products: [
-                        {{products_string|safe}}
-                    ]
-                    }
-                },
-                mounted () {
-                    console.log(this.products)
-                }
-            })
-    </script>
-{% endblock %}
+            <footer class="card-footer">
+                <a :href="product.detailurl" class="card-footer-item">Visit</a>
+                <a :href="product.editurl" class="card-footer-item">Edit</a>
+                <a @click="toggleDialog(product.id)" class="card-footer-item">Delete</a>
+            </footer>
+        </div>
+    </div>
+</div>

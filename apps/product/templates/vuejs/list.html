@@ -1,0 +1,58 @@
+<script type="text/javascript">
+    new Vue({
+        el: '#product_list',
+        delimiters: ['[[', ']]'],
+        data () {
+            return {
+                showList: false,
+                product_id: 0,
+                showDialog: false,
+                products: [
+                    {{products_string|safe}}
+                ]
+                }
+            },
+            mounted () {
+                console.log(this.product_id)
+            },
+            methods: {
+                toggleList(){
+                    this.showList = true
+                },
+                toggleGrid(){
+                    this.showList = false
+                },
+                toggleDialog(id){
+                    this.product_id = id
+                    this.showDialog = true
+                },
+                deleteProduct(){
+                    axios.post('/product/api/delete_product/'+this.product_id+'/')
+                        .then((response)=>{
+                            console.log(response)
+
+                            this.showDialog = false
+
+                            window.location.href = '/product/products'
+                        })
+                        .catch((function (error){
+                            console.log(error)
+                        }))
+                },
+            }
+        });
+
+        $("#example1").DataTable({
+          "responsive": true,
+          "autoWidth": false,
+        });
+        $('#example2').DataTable({
+          "paging": true,
+          "lengthChange": false,
+          "searching": false,
+          "ordering": true,
+          "info": true,
+          "autoWidth": false,
+          "responsive": true,
+        });
+</script>

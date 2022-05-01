@@ -1,0 +1,55 @@
+{% extends 'dashboard/layouts.html' %}
+{% block content %}
+    <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0 text-dark"> Modifier le Produit {{ product.code }}</h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item active"><a href="{% url 'products' %}">Produits</a></li>
+              </ol>
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+<div class="container edit-product">
+    {% if messages %}
+        {% for message in messages %}
+            <article class="message is-{{ message.tags }}">
+                <div class="message-body">
+                    {{ message }}
+                </div>
+            </article>
+        {% endfor %}
+    {% endif %}
+
+    <article class="message is-danger" v-if="errors.length">
+        <div class="message-body">
+            <p v-for="error in errors">
+                [[ error ]]
+            </p>
+        </div>
+    </article>
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <form method="post" v-on:submit="submitForm" novalidate>
+                {% csrf_token %}
+                {% include 'product/fields.html' %}
+
+                <div class="field">
+                    <div class="control" style="margin-left: 30%;">
+                        <button type="submit" class="button is-primary">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+    {% include 'vuejs/edit.html' %}
+{% endblock %}
